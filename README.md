@@ -41,9 +41,9 @@ If exists then update, else insert.
 
     $data = array(
         'inf1' => 'test5',
-        'inf2' => 'save'.rand(1, 100)
+        'inf2' => 'save'
     );
-    $db->save('dummy', $data, "id = :id" , array(':id' => 5));
+    $db->save('dummy', $data, "inf1=:inf1" , array(':inf1' => 'test5'));
 
 
 # 3. Fetch methods
