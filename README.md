@@ -56,9 +56,6 @@ Just like fetch methods in Zend_Db.
     );
     $data = $db->fetchOne($sql, $bind);
 
-Result:  
-    1
-
 ## fetchRow
 
     $sql = "SELECT id, inf1, inf2 FROM dummy WHERE id <= :max ORDER BY id";
