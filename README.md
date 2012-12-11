@@ -3,12 +3,12 @@ EasyPDO
 
 An easy to use PDO wrapper class.
 
-# Connection
+# 1. Connection
 
     include("EasyPDO.php");
     $db = new EasyPDO('mysql:dbname=dummy;host=localhost;charset=UTF8', 'root', '');
 
-# CRUD methods
+# 2. CRUD methods
 Basic functions for data manipulation.
 
 ## select
@@ -46,7 +46,7 @@ If exists then update, else insert.
     $db->save('dummy', $data, "id = :id" , array(':id' => 5));
 
 
-# Fetch methods
+# 3. Fetch methods
 Just like fetch methods in Zend_Db.
 
 ## fetchOne
