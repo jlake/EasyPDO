@@ -9,7 +9,7 @@ An easy to use PDO wrapper class.
     $db = new EasyPDO('mysql:dbname=dummy;host=localhost;charset=UTF8', 'root', '');
 
 # CRUD methods
-Basic functions of persistent storage.
+Basic functions for data manipulation.
 
 ## select
 
