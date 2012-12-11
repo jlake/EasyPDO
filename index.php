@@ -1,5 +1,5 @@
 <?php
-include("EasyPDO.php");
+require_once("EasyPDO.php");
 $db = new EasyPDO('mysql:dbname=dummy;host=localhost;charset=UTF8', 'root', '');
 ?>
 <!DOCTYPE html>

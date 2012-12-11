@@ -5,7 +5,7 @@ An easy to use PDO wrapper class.
 
 # 1. Connection
 
-    include("EasyPDO.php");
+    require_once("EasyPDO.php");
     $db = new EasyPDO('mysql:dbname=dummy;host=localhost;charset=UTF8', 'root', '');
 
 # 2. CRUD methods
