@@ -12,7 +12,7 @@ $db = new EasyPDO('mysql:dbname=dummy;host=localhost;charset=UTF8', 'root', '');
 <h2>Test 1: select</h2>
 <pre>
 <?php
-$data = $db->select('dummy', '*', 'id=1');
+$data = $db->select('dummy', '*', 'id<:max', array(':max'=>100), "id ASC", "0, 3");
 print_r($data);
 ?>
 </pre>
@@ -37,8 +37,8 @@ $data = array(
     'inf1' => 'test3',
     'inf2' => 'update'
 );
-$data = $db->update('dummy', $data, 'id=1');
-$data = $db->select('dummy', '*', 'id=1');
+$data = $db->update('dummy', $data, 'id=:id', array(':id' => 3));
+$data = $db->select('dummy', '*', 'id=:id', array(':id' => 3));
 print_r($data);
 ?>
 </pre>
@@ -46,8 +46,9 @@ print_r($data);
 <h2>Test 4: delete</h2>
 <pre>
 <?php
-$db->delete('dummy', "inf1='test2'");
-$data = $db->select('dummy', '*', "inf1='test2'");
+$db->delete('dummy', "inf1=:inf1" , array(':inf1' => 'test2'));
+
+$data = $db->select('dummy', '*', "inf1=:inf1" , array(':inf1' => 'test2'));
 print_r($data);
 ?>
 </pre>
@@ -59,8 +60,8 @@ $data = array(
     'inf1' => 'test5',
     'inf2' => 'save'.rand(1, 100)
 );
-$db->save('dummy', $data, array('inf1'=>'test5'));
-$data = $db->select('dummy', '*', "inf1='test5'");
+$db->save('dummy', $data, "inf1=:inf1" , array(':inf1' => 'test5'));
+$data = $db->select('dummy', '*', "inf1=:inf1", array('inf1'=>'test5'));
 print_r($data);
 ?>
 </pre>
@@ -69,7 +70,7 @@ print_r($data);
 $sql = "SELECT id, inf1, inf2 FROM dummy WHERE ID BETWEEN :start AND :end ORDER BY id";
 $bind = array(
     ':start' => 1,
-    ':end' => 5
+    ':end' => 3
 );
 ?>
 

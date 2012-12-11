@@ -104,21 +104,22 @@ class EasyPDO extends PDO
      * @param  string $fields  fields list
      * @param  string $where  where string
      * @param  array  $bind  parameters. A single value or an array of values
-     * @param  string $limit  where string
+     * @param  string $order  order string
+     * @param  string $limit  limit string (MySQL is "[offset,] row_count")
      * @return array
      */
-    public function select($table, $fields = "*", $where = "", $bind = array(), $limit = NULL, $order = NULL)
+    public function select($table, $fields = "*", $where = "", $bind = array(), $order = NULL, $limit = NULL)
     {
         $sql = "SELECT " . $fields . " FROM " . $table;
         if(!empty($where)) {
             $where = $this->where($where);
             $sql .= " WHERE " . $where;
         }
-        if(!empty($limit)) {
-            $sql .= " LIMIT " . $limit;
-        }
         if(!empty($order)) {
             $sql .= " ORDER BY " . $order;
+        }
+        if(!empty($limit)) {
+            $sql .= " LIMIT " . $limit;
         }
         $stmt = $this->_prepare($sql, $bind);
         return $stmt->fetchAll($this->_fetchMode);
@@ -148,20 +149,25 @@ class EasyPDO extends PDO
      * @param  string $table  table name
      * @param  array  $data  data array
      * @param  string $where  where string
+     * @param  array  $bind  parameters. A single value or an array of values
      * @return array
      */
-    public function update($table, $data, $where)
+    public function update($table, $data, $where="", $bind=array())
     {
         $sql = "UPDATE " . $table . " SET ";
         $comma = '';
-        $bind = array();
-        foreach($data as $k => $v) {
-            $sql .= $comma . $k . " = :" . $k;
-            $comma = ', ';
-            $bind[$k] = $v;
+        if(!is_array($bind)) {
+            $bind = empty($bind) ? array() : array($bind);
         }
-        $where = $this->where($where);
-        $sql .= " WHERE " . $where;
+        foreach($data as $k => $v) {
+            $sql .= $comma . $k . " = :upd_" . $k;
+            $comma = ', ';
+            $bind[":upd_" . $k] = $v;
+        }
+        if(!empty($where)) {
+            $where = $this->where($where);
+            $sql .= " WHERE " . $where;
+        }
         return $this->run($sql, $bind);
     }
 
@@ -175,30 +181,34 @@ class EasyPDO extends PDO
      */
     public function delete($table, $where, $bind = array())
     {
-        $where = $this->where($where);
-        $sql = "DELETE FROM " . $table . " WHERE " . $where . ";";
+        $sql = "DELETE FROM " . $table;
+        if(!empty($where)) {
+            $where = $this->where($where);
+            $sql .= " WHERE " . $where;
+        }
         return $this->run($sql, $bind);
     }
 
     /**
      * save data to table (update is exists, else insert)
      *
-     * @param string $table  table name
-     * @param array $data  data array
-     * @param mixed $where  SQL WHERE string or key/value array
+     * @param  string $table  table name
+     * @param  array $data  data array
+     * @param  mixed $where  SQL WHERE string or key/value array
+     * @param  array  $bind  parameters. A single value or an array of values
      * @return mixed
      */
-    public function save($table, $data, $where = "")
+    public function save($table, $data, $where = "", $bind = array())
     {
         $count = 0;
         if(!empty($where)) {
             $where = $this->where($where);
-            $count = $this->fetchOne("SELECT COUNT(1) FROM $table WHERE $where");
+            $count = $this->fetchOne("SELECT COUNT(1) FROM $table WHERE $where", $bind);
         }
         if($count == 0) {
             return $this->insert($table, $data);
         } else {
-            return $this->update($table, $data, $where);
+            return $this->update($table, $data, $where, $bind);
         }
     }
 
