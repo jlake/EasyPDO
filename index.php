@@ -67,7 +67,7 @@ print_r($data);
 </pre>
 
 <?php
-$sql = "SELECT id, inf1, inf2 FROM dummy WHERE ID BETWEEN :start AND :end ORDER BY id";
+$sql = "SELECT id, inf1, inf2 FROM dummy WHERE id BETWEEN :start AND :end ORDER BY id";
 $bind = array(
     ':start' => 1,
     ':end' => 3
@@ -109,7 +109,7 @@ print_r($data);
 <h2>Test 9: fetchPairs</h2>
 <pre>
 <?php
-$sql = "SELECT inf1, inf2 FROM dummy WHERE ID BETWEEN :start AND :end ORDER BY id";
+$sql = "SELECT inf1, inf2 FROM dummy WHERE id BETWEEN :start AND :end ORDER BY id";
 $data = $db->fetchPairs($sql, $bind);
 print_r($data);
 ?>
@@ -118,7 +118,7 @@ print_r($data);
 <h2>Test 9: fetchCol</h2>
 <pre>
 <?php
-$sql = "SELECT inf1 FROM dummy WHERE ID BETWEEN :start AND :end ORDER BY id";
+$sql = "SELECT inf1 FROM dummy WHERE id BETWEEN :start AND :end ORDER BY id";
 $data = $db->fetchCol($sql, $bind);
 print_r($data);
 ?>
