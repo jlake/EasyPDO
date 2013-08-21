@@ -33,7 +33,7 @@ Basic functions for data manipulation.
         'inf1' => 'test3',
         'inf2' => 'update'
     );
-    $data = $db->update('dummy', $data, 'id = :id', array(':id' => 3);
+    $data = $db->update('dummy', $data, 'id = :id', array(':id' => 3));
 ```
 
 ## delete
