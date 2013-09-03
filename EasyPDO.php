@@ -14,15 +14,17 @@ class EasyPDO extends PDO
      */
     public function  __construct($dsn, $user='', $passwd='', $options=NULL)
     {
-        if(empty($options)) {
-            $options = array(
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_PERSISTENT => true,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            );
+        $driver_options = array(
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+        );
+        if(!empty($options)) {
+            $driver_options = array_merge($driver_options, $options);
         }
 
-        parent::__construct($dsn, $user, $passwd, $options);
+        parent::__construct($dsn, $user, $passwd, $driver_options);
     }
 
     /**
