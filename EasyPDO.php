@@ -237,7 +237,7 @@ class EasyPDO extends PDO
     public function fetchRow($sql, $bind = array())
     {
         $stmt = $this->_prepare($sql, $bind);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch($this->_fetchMode);
     }
 
     /**
@@ -250,7 +250,7 @@ class EasyPDO extends PDO
     public function fetchAll($sql, $bind = array())
     {
         $stmt = $this->_prepare($sql, $bind);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll($this->_fetchMode);
     }
 
     /**
