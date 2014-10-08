@@ -56,9 +56,9 @@ Just like fetch methods in Zend_Db.
 
 ## fetchOne
 ```php
-    $sql = "SELECT id, inf1, inf2 FROM dummy WHERE id <= :max ORDER BY id";
+    $sql = "SELECT inf1 FROM dummy WHERE id = :id";
     $bind = array(
-        ':max' => 100
+        ':id' => 1
     );
     $data = $db->fetchOne($sql, $bind);
 ```
