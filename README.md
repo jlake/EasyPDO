@@ -84,7 +84,7 @@ Just like fetch methods in Zend_Db.
 
 ## fetchAssoc
 ```php
-    $sql = "SELECT inf1, inf2 FROM dummy WHERE ID BETWEEN :start AND :end ORDER BY id";
+    $sql = "SELECT inf1, inf2 FROM dummy WHERE id BETWEEN :start AND :end ORDER BY id";
     $bind = array(
         ':start' => 1,
         ':end' => 3
@@ -94,7 +94,7 @@ Just like fetch methods in Zend_Db.
 
 ## fetchPairs
 ```php
-    $sql = "SELECT inf1 AS name, inf2 AS value FROM dummy WHERE ID BETWEEN :start AND :end ORDER BY id";
+    $sql = "SELECT inf1 AS name, inf2 AS value FROM dummy WHERE id BETWEEN :start AND :end ORDER BY id";
     $bind = array(
         ':start' => 1,
         ':end' => 3
@@ -104,7 +104,7 @@ Just like fetch methods in Zend_Db.
 
 ## fetchCol
 ```php
-    $sql = "SELECT inf1 FROM dummy WHERE ID BETWEEN :start AND :end ORDER BY id";
+    $sql = "SELECT inf1 FROM dummy WHERE id BETWEEN :start AND :end ORDER BY id";
     $bind = array(
         ':start' => 1,
         ':end' => 3
