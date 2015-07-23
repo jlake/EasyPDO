@@ -1,4 +1,9 @@
 <?php
+/**
+ * A PDO wrapper class for ease of coding
+ *
+ * @author ou
+ */
 class EasyPDO extends PDO
 {
     private $_fetchMode = PDO::FETCH_ASSOC;
@@ -132,17 +137,47 @@ class EasyPDO extends PDO
      *
      * @param  string $table  table name
      * @param  array  $data  data array
-     * @return array
+     * @return integer Number of effected rows
      */
     public function insert($table, $data)
     {
-        $fields = array_keys($data);
-        $sql = "INSERT INTO " . $table . " (" . implode($fields, ", ") . ") VALUES (:" . implode($fields, ", :") . ");";
+        $fieldNames = array_keys($data);
+        $sql = "INSERT INTO `$table` (" . implode($fieldNames, ", ") . ") VALUES (:" . implode($fieldNames, ", :") . ");";
         $bind = array();
-        foreach($fields as $field) {
+        foreach($fieldNames as $field) {
             $bind[":$field"] = $data[$field];
         }
         return $this->run($sql, $bind);
+    }
+
+    /**
+     * insert multiple records to a table
+     *
+     * @param  string $table  table name
+     * @param  array  $fieldNames  fields array
+     * @param  array  $data  data array
+     * @return integer Number of effected rows
+     */
+    public function bulkInsert($table, $fieldNames, $data)
+    {
+        $valueList = '';
+        foreach ($data as $values) {
+            foreach ($values as &$val) {
+                if (is_null($val)) {
+                    $val = 'NULL';
+                    continue;
+                }
+                if (is_string($val)) {
+                    $val = "'".$val."'";
+                }
+            }
+            $valueList .= '(' . implode(', ', $values) . '),';
+        }
+        $valueList = rtrim($valueList, ',');
+
+        $sql = "INSERT INTO `$table` (" . implode(', ', $fieldNames) . ") VALUES " . $valueList . ";";
+
+        return $this->run($sql);
     }
 
     /**
@@ -152,11 +187,11 @@ class EasyPDO extends PDO
      * @param  array  $data  data array
      * @param  string $where  where string
      * @param  array  $bind  parameters. A single value or an array of values
-     * @return array
+     * @return integer Number of effected rows
      */
     public function update($table, $data, $where="", $bind=array())
     {
-        $sql = "UPDATE " . $table . " SET ";
+        $sql = "UPDATE `$table` SET ";
         $comma = '';
         if(!is_array($bind)) {
             $bind = empty($bind) ? array() : array($bind);
@@ -179,11 +214,11 @@ class EasyPDO extends PDO
      * @param  string $table  table name
      * @param  string $where  where string
      * @param  array  $bind  parameters. A single value or an array of values
-     * @return array
+     * @return integer Number of effected rows
      */
     public function delete($table, $where, $bind = array())
     {
-        $sql = "DELETE FROM " . $table;
+        $sql = "DELETE FROM `$table`";
         if(!empty($where)) {
             $where = $this->where($where);
             $sql .= " WHERE " . $where;
@@ -198,7 +233,7 @@ class EasyPDO extends PDO
      * @param  array $data  data array
      * @param  mixed $where  SQL WHERE string or key/value array
      * @param  array  $bind  parameters. A single value or an array of values
-     * @return mixed
+     * @return integer Number of effected rows
      */
     public function save($table, $data, $where = "", $bind = array())
     {
@@ -307,4 +342,54 @@ class EasyPDO extends PDO
         }
         return $result;
     }
+
+    /**
+     * create table
+     *
+     * @param  string $table  table name
+     * @param  array  $fieldNames  field name array
+     * @param  array  $fieldTypes  field type array
+     * @param  array  $defaultValues  field default value array
+     * @param  array  $fieldComments  field comment array
+     * @param  string $primaryKey  primary key
+     * @param  array  $indexes  index array
+     * @param  string $engine  storage engine
+     * @param  string $charset  default charset
+     * @return integer Number of effected rows
+     */
+    public function createTable($table, $fieldNames, $fieldTypes, $defaultValues, $fieldComments, $primaryKey = '', $indexes = array(), $dbEngine = 'InnoDB', $charset='utf8')
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS `$table` (";
+        foreach($fieldNames as $i => $fieldName) {
+            $sql .= "`$fieldName` " . $fieldTypes[$i];
+            if(!empty($defaultValues[$i])) {
+                $sql .= " DEFAULT " . $defaultValues[$i];
+            }
+            if(!empty($fieldComments[$i])) {
+                $sql .= " COMMENT '" . $fieldComments[$i] . "'";
+            }
+            $sql .= ", ";
+        }
+        if(empty($primaryKey)) {
+            $primaryKey = $fieldNames[0];
+        }
+        $sql .= "PRIMARY KEY $primaryKey";
+        foreach($indexes as $i => $index) {
+            $sql .= "INDEX index_{$i} $index";
+        }
+        $sql .= ") ENGINE={$dbEngine} DEFAULT CHARSET={$charset};";
+        return $this->run($sql);
+    }
+
+    /**
+     * drop table
+     *
+     * @param  string $table  table name
+     */
+    public function dropTable($table)
+    {
+        $sql = "DROP TABLE IF EXISTS `$table`;";
+        return $this->run($sql);
+    }
+
 }
