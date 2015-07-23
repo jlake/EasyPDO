@@ -161,8 +161,14 @@ class EasyPDO extends PDO
      */
     public function bulkInsert($table, $fieldNames, $data, $replace = false)
     {
+        $fieldCount = count($fieldNames);
         $valueList = '';
         foreach ($data as $values) {
+            if(count($fieldCount) > $fieldCount) {
+                $values = array_slice($values, 0, $fieldCount);
+            } else {
+                throw new PDOException("Number of columns and values not match!");
+            }
             foreach ($values as &$val) {
                 if (is_null($val)) {
                     $val = 'NULL';
