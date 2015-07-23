@@ -373,9 +373,9 @@ class EasyPDO extends PDO
         if(empty($primaryKey)) {
             $primaryKey = $fieldNames[0];
         }
-        $sql .= "PRIMARY KEY $primaryKey";
+        $sql .= " PRIMARY KEY $primaryKey";
         foreach($indexes as $i => $index) {
-            $sql .= "INDEX index_{$i} $index";
+            $sql .= ",INDEX index_{$i} $index";
         }
         $sql .= ") ENGINE={$dbEngine} DEFAULT CHARSET={$charset};";
         return $this->run($sql);
