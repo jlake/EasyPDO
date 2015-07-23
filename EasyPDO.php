@@ -156,9 +156,10 @@ class EasyPDO extends PDO
      * @param  string $table  table name
      * @param  array  $fieldNames  fields array
      * @param  array  $data  data array
+     * @param  bool  $replace  replace flag
      * @return integer Number of effected rows
      */
-    public function bulkInsert($table, $fieldNames, $data)
+    public function bulkInsert($table, $fieldNames, $data, $replace = false)
     {
         $valueList = '';
         foreach ($data as $values) {
@@ -168,15 +169,15 @@ class EasyPDO extends PDO
                     continue;
                 }
                 if (is_string($val)) {
-                    $val = "'".$val."'";
+                    $val = $this->quote($val);
                 }
             }
             $valueList .= '(' . implode(', ', $values) . '),';
         }
         $valueList = rtrim($valueList, ',');
 
-        $sql = "INSERT INTO `$table` (" . implode(', ', $fieldNames) . ") VALUES " . $valueList . ";";
-
+        $insert = $replace ? 'REPLACE' : 'INSERT';
+        $sql = "$insert INTO `$table` (" . implode(', ', $fieldNames) . ") VALUES " . $valueList . ";";
         return $this->run($sql);
     }
 
@@ -289,7 +290,7 @@ class EasyPDO extends PDO
     }
 
     /**
-     * Execute sql and returns row(s) as 2D array, array key is first column's values 
+     * Execute sql and returns row(s) as 2D array, array key is first column's values
      *
      * @param  string  $sql    SQL statement
      * @param  array   $bind A single value or an array of values
