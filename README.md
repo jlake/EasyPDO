@@ -111,7 +111,7 @@ Just like fetch methods in Zend_Db.
     );
     $data = $db->fetchCol($sql, $bind);
 ```
-# 3. Transaction methods
+# 4. Transaction methods
 same as original PDO class, but can be nested.
 
 ## Example
