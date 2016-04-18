@@ -111,3 +111,25 @@ Just like fetch methods in Zend_Db.
     );
     $data = $db->fetchCol($sql, $bind);
 ```
+# 3. Transaction methods
+same as original PDO class, but can be nested.
+
+## Example
+```php
+    try {
+        $db->beginTransaction();
+        for($i=0; $i < 5; $i++) {
+            $db->insert(
+                'dummy',
+                array(
+                    'id'=> rand(1, 10000), 
+                    'inf1'=> 'random id', 
+                    'inf2'=> 'transaction test'
+                )
+            );
+        }
+        $db->commit();
+    } catch(PDOException $e) {
+        $db->rollback();
+    }
+```

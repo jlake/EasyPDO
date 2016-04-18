@@ -401,6 +401,18 @@ class EasyPDO extends PDO
     }
 
     /**
+     * begin transaction
+     */
+    public function beginTransaction()
+    {
+        if (!$this->_transactionCount++) {
+            return parent::beginTransaction();
+        }
+        $this->exec('SAVEPOINT trans'.$this->_transactionCount);
+        return $this->_transactionCount >= 0;
+    }
+
+    /**
      * commit transaction
      */
     public function commit()
