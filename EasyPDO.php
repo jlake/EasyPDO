@@ -6,7 +6,8 @@
  */
 class EasyPDO extends PDO
 {
-    private $_fetchMode = PDO::FETCH_ASSOC;
+    protected $_fetchMode = PDO::FETCH_ASSOC;
+    protected $_transactionCount = 0;
 
     /**
      * Class constructor
@@ -178,7 +179,7 @@ class EasyPDO extends PDO
                     $val = $this->quote($val);
                 }
             }
-            $valueList .= '(' . implode(', ', $values) . '),';
+            $valueList .= '(' . implode(',', $values) . '),';
         }
         $valueList = rtrim($valueList, ',');
 
@@ -397,6 +398,37 @@ class EasyPDO extends PDO
     {
         $sql = "DROP TABLE IF EXISTS `$table`;";
         return $this->run($sql);
+    }
+
+    /**
+     * commit transaction
+     */
+    public function commit()
+    {
+        if (!--$this->_transactionCount) {
+            return parent::commit();
+        }
+        return $this->_transactionCount >= 0;
+    }
+
+    /**
+     * rollback transaction
+     */
+    public function rollback()
+    {
+        if (--$this->_transactionCount) {
+            $this->exec('ROLLBACK TO trans'.($this->_transactionCount + 1));
+            return true;
+        }
+        return parent::rollback();
+    }
+
+    /**
+     * has transaction ?
+     */
+    public function hasTransaction()
+    {
+        return $this->_transactionCount > 0;
     }
 
 }
