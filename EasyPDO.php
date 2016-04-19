@@ -165,7 +165,7 @@ class EasyPDO extends PDO
         $fieldCount = count($fieldNames);
         $valueList = '';
         foreach ($data as $values) {
-            if(count($fieldCount) > $fieldCount) {
+            if(count($values) > $fieldCount) {
                 $values = array_slice($values, 0, $fieldCount);
             } else {
                 throw new PDOException("Number of columns and values not match!");
