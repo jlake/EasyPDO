@@ -51,6 +51,18 @@ If exists then update, else insert.
     $db->save('dummy', $data, "inf1=:inf1" , array(':inf1' => 'test5'));
 ```
 
+## bulkInsert
+Insert multiple rows at a time.
+```php
+    $columns = array('inf1', 'inf2');
+    $data = array(
+        array('value1', 'value2'),
+        array('value3', 'value4'),
+        array('value5', 'value6'),
+    );
+    $db->bulkInsert('dummy', $columns, $data);
+```
+
 # 3. Fetch methods
 Just like fetch methods in Zend_Db.
 
