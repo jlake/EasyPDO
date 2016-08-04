@@ -104,6 +104,16 @@ Just like fetch methods in Zend_Db.
     $data = $db->fetchAssoc($sql, $bind);
 ```
 
+## fetchAssocArr
+```php
+    $sql = "SELECT inf1, inf2 FROM dummy WHERE id BETWEEN :start AND :end ORDER BY id";
+    $bind = array(
+        ':start' => 1,
+        ':end' => 3
+    );
+    $data = $db->fetchAssoc($sql, $bind);
+```
+
 ## fetchPairs
 ```php
     $sql = "SELECT inf1 AS name, inf2 AS value FROM dummy WHERE id BETWEEN :start AND :end ORDER BY id";
@@ -124,7 +134,7 @@ Just like fetch methods in Zend_Db.
     $data = $db->fetchCol($sql, $bind);
 ```
 # 4. Transaction methods
-same as original PDO class, but can be nested.
+Same as original PDO class, but can be nested.
 
 ## Example
 ```php

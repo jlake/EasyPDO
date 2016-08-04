@@ -318,6 +318,27 @@ class EasyPDO extends PDO
     }
 
     /**
+     * Execute sql and returns row(s) as 3D array, array key is first column's values
+     *
+     * @param  string  $sql    SQL statement
+     * @param  array   $bind A single value or an array of values
+     * @return array   Result rows
+     */
+    public function fetchAssocArr($sql, $bind = array())
+    {
+        $stmt = $this->_prepare($sql, $bind);
+        $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = array();
+        if(!empty($records)) {
+            $k0 = key($records[0]);
+            foreach($records as $rec) {
+                $result[$rec[$k0]][] = $rec;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * Execute sql and returns a key/value pairs array
      *
      * @param  string  $sql    SQL statement
