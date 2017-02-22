@@ -116,7 +116,7 @@ Just like fetch methods in Zend_Db.
         ':start' => 1,
         ':end' => 3
     );
-    $data = $db->fetchAssoc($sql, $bind);
+    $data = $db->fetchAssocArr($sql, $bind);
 ```
 
 ## fetchPairs
