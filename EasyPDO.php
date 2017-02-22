@@ -162,13 +162,19 @@ class EasyPDO extends PDO
      */
     public function bulkInsert($table, $fieldNames, $data, $replace = false)
     {
+        if(empty($table) || empty($fieldNames) || empty($data)) {
+            return 0;
+        }
         $fieldCount = count($fieldNames);
         $valueList = '';
         foreach ($data as $values) {
-            if(count($values) > $fieldCount) {
-                $values = array_slice($values, 0, $fieldCount);
-            } else {
-                throw new PDOException("Number of columns and values not match!");
+            $dataCount = count($values);
+            if($dataCount != $fieldCount) {
+                if($dataCount > $fieldCount) {
+                    $values = array_slice($values, 0, $fieldCount);
+                } else {
+                    throw new PDOException("Number of columns and values not match!");
+                }
             }
             foreach ($values as &$val) {
                 if (is_null($val)) {
@@ -232,6 +238,18 @@ class EasyPDO extends PDO
             $sql .= " WHERE " . $where;
         }
         return $this->run($sql, $bind);
+    }
+
+    /**
+     * truncate table
+     *
+     * @param  string $table  table name
+     * @return integer Number of effected rows
+     */
+    public function truncate($table)
+    {
+        $sql = "TRUNCATE TABLE `$table`";
+        return $this->run($sql);
     }
 
     /**

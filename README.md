@@ -41,6 +41,11 @@ Basic functions for data manipulation.
     $db->delete('dummy', "id=:id" , array(':id' => 3));
 ```
 
+## truncate
+```php
+    $db->truncate('dummy');
+```
+
 ## save
 If exists then update, else insert.
 ```php
