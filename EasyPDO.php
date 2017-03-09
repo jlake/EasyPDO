@@ -179,10 +179,10 @@ class EasyPDO extends PDO
             foreach ($values as &$val) {
                 if (is_null($val)) {
                     $val = 'NULL';
-                    continue;
-                }
-                if (is_string($val)) {
+                } elseif (is_string($val)) {
                     $val = $this->quote($val);
+                } elseif (is_object($val) || is_array($val)) {
+                    $val = $this->quote(json_encode($val));
                 }
             }
             $valueList .= '(' . implode(',', $values) . '),';
